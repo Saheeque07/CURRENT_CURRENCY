@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Exchange Rate</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            font-size: 16px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #exchange-rate {
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Currency Exchange Rate</h1>
+        <p>Enter the currency code (e.g., EUR, INR, GBP):</p>
+        <input type="text" id="currency-code" placeholder="Enter currency code">
+        <button id="get-rate">Get Rate</button>
+        <p>USD to <span id="target-currency">---</span>: <span id="exchange-rate">---</span></p>
+    </div>
+    <script>
+        document.getElementById('get-rate').addEventListener('click', function () {
+            const apiKey = 'fca_live_AV4eA1Fl7a7xSfQzxBKuCY6Ux34zfsi40HdcmhBl'; // Your API key
+            const currencyCode = document.getElementById('currency-code').value.toUpperCase();
+            const apiUrl = `https://api.exchangerate-api.com/v4/latest/USD?apikey=${apiKey}`;
+
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.rates[currencyCode]) {
+                        const exchangeRate = data.rates[currencyCode];
+                        document.getElementById('target-currency').textContent = currencyCode;
+                        document.getElementById('exchange-rate').textContent = exchangeRate.toFixed(2);
+                    } else {
+                        document.getElementById('exchange-rate').textContent = 'Invalid currency code';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching exchange rate:', error);
+                    document.getElementById('exchange-rate').textContent = 'Error';
+                });
+        });
+    </script>
+</body>
+</html>
